@@ -39,28 +39,34 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.util.QueryRunner;
+import net.runelite.api.Client;
+import net.runelite.api.ItemComposition;
 
-public class JunkCleanerOverlay extends Overlay 
-{
+public class JunkCleanerOverlay extends Overlay {
+	private static final float HIGH_ALCHEMY_CONSTANT = 0.6f;
 
 	private final QueryRunner queryRunner;
 	private final ItemManager itemManager;
 	private final JunkCleanerPlugin plugin;
+	private final JunkCleanerConfig config;
+	private final Client client;
 
 	@Inject
-	private JunkCleanerOverlay(QueryRunner queryRunner, ItemManager itemManager, JunkCleanerPlugin plugin) 
-	{
+	private JunkCleanerOverlay(QueryRunner queryRunner, ItemManager itemManager, JunkCleanerPlugin plugin,
+			JunkCleanerConfig config, Client client) {
 		setPosition(OverlayPosition.DYNAMIC);
 		setPriority(OverlayPriority.LOW);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		this.queryRunner = queryRunner;
 		this.itemManager = itemManager;
 		this.plugin = plugin;
+
+		this.config = config;
+		this.client = client;
 	}
 
 	@Override
-	public Dimension render(Graphics2D graphics) 
-	{
+	public Dimension render(Graphics2D graphics) {
 		// Now query the inventory for the tagged item ids
 		final Query query = new BankItemQuery();
 		final WidgetItem[] widgetItems = queryRunner.runQuery(query);
@@ -68,12 +74,31 @@ public class JunkCleanerOverlay extends Overlay
 		// Iterate through all found items and draw the outlines
 		for (final WidgetItem item : widgetItems) {
 
-			final Color color = new Color(152, 0, 13);
-			if (color != null) {
+			final Color color = new Color(152, 0, 13, 50);
+			if (color != null && isLessThanValue(item.getId(), item.getQuantity())) {
 				final BufferedImage outline = itemManager.getItemOutline(item.getId(), item.getQuantity(), color);
-				graphics.drawImage(outline, item.getCanvasLocation().getX() + 1, item.getCanvasLocation().getY() + 1, null);
+				graphics.setPaint(color);
+				graphics.fillRect(item.getCanvasLocation().getX() + 1, item.getCanvasLocation().getY() + 1,
+						outline.getWidth(), outline.getHeight());
 			}
 		}
 		return null;
+	}
+
+	boolean isLessThanValue(int itemId, int itemQuantity) {
+		final ItemComposition itemComposition = itemManager.getItemComposition(itemId);
+
+		int price = itemComposition.getPrice();
+
+		long highAlchPrice = (long) Math.round(price * HIGH_ALCHEMY_CONSTANT) * (long) itemQuantity;
+		int gePrice = itemManager.getItemPrice(itemId);
+		if (gePrice < 1 || gePrice * itemQuantity > config.minGpValue()) {
+			return false;
+		}
+
+		// if (price > 0 && highAlchPrice > config.minGpValue()) {
+		// return false;
+		// }
+		return true;
 	}
 }
