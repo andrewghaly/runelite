@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Devin French <https://github.com/devinfrench>
+ * Copyright (c) 2019, Abel Briggs <https://github.com/abelbriggs1>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,53 +22,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api.queries;
 
-import net.runelite.api.Client;
-import net.runelite.api.Query;
-import net.runelite.api.widgets.WidgetItem;
+package net.runelite.client.plugins.grounditems.config;
 
-public abstract class WidgetItemQuery extends Query<WidgetItem, WidgetItemQuery>
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum ValueCalculationMode
 {
+	HA("High Alchemy"), // calc highlight by HA value
+	GE("Grand Exchange"), // calc by GE
+	HIGHEST("Highest"); // use whatever is highest.
 
-	public WidgetItemQuery idEquals(int... ids)
-	{
-		predicate = and(item ->
-		{
-			for (int id : ids)
-			{
-				if (item.getId() == id)
-				{
-					return true;
-				}
-			}
-			return false;
-		});
-		return this;
-	}
-
-	public WidgetItemQuery indexEquals(int... indexes)
-	{
-		predicate = and(item ->
-		{
-			for (int index : indexes)
-			{
-				if (item.getIndex() == index)
-				{
-					return true;
-				}
-			}
-			return false;
-		});
-		return this;
-	}
-
-	public WidgetItemQuery quantityEquals(int quantity)
-	{
-		predicate = and(item -> item.getQuantity() == quantity);
-		return this;
-	}
+	private final String name;
 
 	@Override
-	public abstract WidgetItem[] result(Client client);
+	public String toString()
+	{
+		return name;
+	}
 }
