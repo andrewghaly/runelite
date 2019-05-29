@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - RuneLite",
+            "request": "launch",
+            "mainClass": "net.runelite.client.RuneLite",
+            "projectName": "client"
+        }
+    ]
+}
