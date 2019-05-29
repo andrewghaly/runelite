@@ -24,7 +24,7 @@
  */
 package net.runelite.client.plugins.itemidentification;
 
-import java.util.HashMap;
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import net.runelite.api.ItemID;
 
@@ -55,7 +55,7 @@ enum ItemIdentification
 	HARRALANDER(Type.HERB, "Harra", "H", ItemID.HARRALANDER, ItemID.GRIMY_HARRALANDER),
 	RANARR(Type.HERB, "Ranarr", "R", ItemID.RANARR_WEED, ItemID.GRIMY_RANARR_WEED),
 	TOADFLAX(Type.HERB, "Toad", "TOA", ItemID.TOADFLAX, ItemID.GRIMY_TOADFLAX),
-	IRIT(Type.HERB, "Irit", "I", ItemID.IRIT_LEAF, ItemID.GRIMY_TOADFLAX),
+	IRIT(Type.HERB, "Irit", "I", ItemID.IRIT_LEAF, ItemID.GRIMY_IRIT_LEAF),
 	AVANTOE(Type.HERB, "Avantoe", "A", ItemID.AVANTOE, ItemID.GRIMY_AVANTOE),
 	KWUARM(Type.HERB, "Kwuarm", "K", ItemID.KWUARM, ItemID.GRIMY_KWUARM),
 	SNAPDRAGON(Type.HERB, "Snap", "S", ItemID.SNAPDRAGON, ItemID.GRIMY_SNAPDRAGON),
@@ -100,17 +100,21 @@ enum ItemIdentification
 		this.itemIDs = ids;
 	}
 
-	private static final Map<Integer, ItemIdentification> itemIdentifications = new HashMap<>();
+	private static final Map<Integer, ItemIdentification> itemIdentifications;
 
 	static
 	{
+		ImmutableMap.Builder<Integer, ItemIdentification> builder = new ImmutableMap.Builder<>();
+
 		for (ItemIdentification i : values())
 		{
 			for (int id : i.itemIDs)
 			{
-				itemIdentifications.put(id, i);
+				builder.put(id, i);
 			}
 		}
+
+		itemIdentifications = builder.build();
 	}
 
 	static ItemIdentification get(int id)

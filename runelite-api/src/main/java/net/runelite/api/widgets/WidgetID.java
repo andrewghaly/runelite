@@ -133,6 +133,12 @@ public class WidgetID
 	public static final int BARROWS_PUZZLE_GROUP_ID = 25;
 	public static final int KEPT_ON_DEATH_GROUP_ID = 4;
 	public static final int GUIDE_PRICE_GROUP_ID = 464;
+	public static final int SEED_VAULT_INVENTORY_GROUP_ID = 630;
+	public static final int BEGINNER_CLUE_MAP_CHAMPIONS_GUILD = 346;
+	public static final int BEGINNER_CLUE_MAP_VARROCK_EAST_MINE = 347;
+	public static final int BEGINNER_CLUE_MAP_DRAYNOR = 348;
+	public static final int BEGINNER_CLUE_MAP_NORTH_OF_FALADOR = 351;
+	public static final int BEGINNER_CLUE_MAP_WIZARDS_TOWER = 356;
 
 	static class WorldMap
 	{
@@ -204,9 +210,9 @@ public class WidgetID
 	static class ClanChat
 	{
 		static final int TITLE = 1;
-		static final int NAME = 3;
-		static final int OWNER = 5;
-		static final int LIST = 15;
+		static final int NAME = 4;
+		static final int OWNER = 6;
+		static final int LIST = 16;
 	}
 
 	static class Bank
@@ -527,6 +533,7 @@ public class WidgetID
 		static final int SPELL_ICON = 27;
 		static final int SPELL_TEXT = 28;
 		static final int AUTO_RETALIATE = 29;
+		static final int SPEC_BAR = 34;
 	}
 
 	static class VolcanicMine
