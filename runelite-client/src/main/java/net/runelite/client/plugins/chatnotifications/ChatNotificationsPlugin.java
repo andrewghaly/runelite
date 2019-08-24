@@ -68,9 +68,6 @@ public class ChatNotificationsPlugin extends Plugin
 	@Inject
 	private Notifier notifier;
 
-	@Inject
-	private RuneLiteProperties runeLiteProperties;
-
 	//Custom Highlights
 	private Pattern usernameMatcher = null;
 	private String usernameReplacer = "";
@@ -117,9 +114,12 @@ public class ChatNotificationsPlugin extends Plugin
 		{
 			List<String> items = Text.fromCSV(config.highlightWordsString());
 			String joined = items.stream()
+				.map(Text::escapeJagex) // we compare these strings to the raw Jagex ones
 				.map(Pattern::quote)
 				.collect(Collectors.joining("|"));
-			highlightMatcher = Pattern.compile("\\b(" + joined + ")\\b", Pattern.CASE_INSENSITIVE);
+			// To match <word> \b doesn't work due to <> not being in \w,
+			// so match \b or \s
+			highlightMatcher = Pattern.compile("(?:\\b|(?<=\\s))(" + joined + ")(?:\\b|(?=\\s))", Pattern.CASE_INSENSITIVE);
 		}
 	}
 
@@ -127,7 +127,6 @@ public class ChatNotificationsPlugin extends Plugin
 	public void onChatMessage(ChatMessage chatMessage)
 	{
 		MessageNode messageNode = chatMessage.getMessageNode();
-		String nodeValue = Text.removeTags(messageNode.getValue());
 		boolean update = false;
 
 		switch (chatMessage.getType())
@@ -146,7 +145,7 @@ public class ChatNotificationsPlugin extends Plugin
 				break;
 			case CONSOLE:
 				// Don't notify for notification messages
-				if (chatMessage.getName().equals(runeLiteProperties.getTitle()))
+				if (chatMessage.getName().equals(RuneLiteProperties.getTitle()))
 				{
 					return;
 				}
@@ -177,6 +176,7 @@ public class ChatNotificationsPlugin extends Plugin
 
 		if (highlightMatcher != null)
 		{
+			String nodeValue = messageNode.getValue();
 			Matcher matcher = highlightMatcher.matcher(nodeValue);
 			boolean found = false;
 			StringBuffer stringBuffer = new StringBuffer();
