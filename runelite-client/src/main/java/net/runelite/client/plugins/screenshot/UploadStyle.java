@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
+ * Copyright (c) 2019, Alexsuperfly <https://github.com/Alexsuperfly>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,17 +22,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.cluescrolls.clues;
 
-import net.runelite.api.coords.WorldPoint;
+package net.runelite.client.plugins.screenshot;
 
-public interface LocationClueScroll
+public enum UploadStyle
 {
-	WorldPoint getLocation();
-
-	default WorldPoint[] getLocations()
-	{
-		WorldPoint location = getLocation();
-		return location == null ? new WorldPoint[0] : new WorldPoint[]{location};
-	}
+	NEITHER,
+	IMGUR,
+	CLIPBOARD
 }
